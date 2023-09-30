@@ -1,6 +1,9 @@
 const express=require('express')
 const app=express()
+const cors =require('cors')
 const PORT=process.env.PORT||5500;
+app.use(cors())
+app.get('/',(req,res)=>res.send('Socket is live'))
 const server=require('http').createServer(app)
 const io=require('socket.io')(server,{
     cors:{
