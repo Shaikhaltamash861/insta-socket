@@ -1,5 +1,8 @@
-const PORT=process.env.PORT||8900;
-const io=require('socket.io')(PORT,{
+const express=require('express')
+const app=express()
+const PORT=process.env.PORT||5500;
+const server=require('http').createServer(app)
+const io=require('socket.io')(server,{
     cors:{
         origin:'*'
     }
@@ -15,7 +18,7 @@ const removeUser=(socketId)=>{
     
 }
 const getUsers=(userId)=>{
-      return users.find((user)=>user.userId==userId)
+    return users.find((user)=>user.userId==userId)
 }
 io.on('connection',(socket)=>{
     
@@ -30,7 +33,7 @@ io.on('connection',(socket)=>{
         const user=getUsers(receiverId);
         if( user?.socketId){
             console.log(`msg`)
-             
+            
             io.to(user.socketId).emit('getMessage',{senderId,message})
         }
         
@@ -43,6 +46,7 @@ io.on('connection',(socket)=>{
         io.emit('online-users',users)
     })
 })
+server.listen(PORT,()=>console.log(`Socket server is live on ${PORT}`))
 
 // const PORT=process.env.PORT||8900;
 // const io=require('socket.io')(PORT,{
@@ -58,17 +62,17 @@ io.on('connection',(socket)=>{
 //     users.push({userId,socketId})
 // }
 // const removeUser=(socketId)=>{
-//     users=users.filter((user)=>user.socketId!==socketId)
+    //     users=users.filter((user)=>user.socketId!==socketId)
     
-// }
+    // }
 // const getUsers=(userId)=>{
 //     return users.find((user)=>user.userId==userId)
 // }
 // io.on("connection", (socket) => {
-//   // ...
-  
-//   socket.on('addUsers',(userId)=>{
+    //   // ...
     
+    //   socket.on('addUsers',(userId)=>{
+        
 //     addUsers(userId,socket.id)
 //     console.log(users.length)
 //     io.emit('online-users',users)
